@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Póster Bitácora | El Limonar Ecohotel</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700;800&family=Lato:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --verde-oscuro: #081c15; 
+            --verde-principal: #1b4332; 
+            --verde-vivo: #40916c;
+            --verde-claro: #d8f3dc;
+            --blanco-papel: #fcfdfc;
+            --terracota: #c05621;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: #d1d5db;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding-top: 80px; 
+            padding-bottom: 40px;
+            font-family: 'Lato', sans-serif;
+        }
+
+        /* Toolbar Superior */
+        .toolbar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            background-color: white;
+            padding: 15px;
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .btn-action {
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 50px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            text-decoration: none;
+            transition: transform 0.2s;
+        }
+
+        .btn-print { background-color: var(--terracota); }
+        .btn-download { background-color: var(--verde-principal); }
+        .btn-action:hover { transform: scale(1.03); }
+
+        /* Contenedor del Póster */
+        .poster-container {
+            background-color: var(--verde-principal); 
+            width: 210mm; /* Ancho A4 */
+            min-height: 297mm; /* Alto A4 */
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        /* Espacio para que el contenido respire dentro del marco verde */
+        .poster-inner {
+            background-color: var(--blanco-papel);
+            margin: 10mm; /* Crea el marco verde */
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 25px 35px;
+            position: relative;
+        }
+
+        .poster-inner::after {
+            content: '';
+            position: absolute;
+            top: 0; right: 0;
+            width: 100px; height: 100px;
+            background: linear-gradient(135deg, transparent 50%, var(--verde-claro) 50%);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .logo-main {
+            height: 90px;
+            margin-bottom: 10px;
+            object-fit: contain;
+        }
+
+        h1 {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 800;
+            font-size: 30px;
+            color: var(--verde-oscuro);
+            text-transform: uppercase;
+            line-height: 1;
+        }
+
+        .tagline {
+            font-size: 14px;
+            color: var(--verde-principal);
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* GRID DE FOTOS */
+        .experience-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .exp-card {
+            border: 2px solid var(--verde-principal);
+            border-radius: 6px;
+            overflow: hidden;
+            background: white;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .img-box {
+            width: 100%;
+            height: 90px; /* Altura fija para evitar cortes */
+            overflow: hidden;
+        }
+
+        .img-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .exp-info { padding: 5px; text-align: center; }
+        .exp-info h3 { font-size: 11px; font-weight: 800; color: var(--verde-oscuro); }
+        .exp-info p { font-size: 9px; color: #555; }
+
+        /* FOTO HERO */
+        .hero-section {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .hero-frame {
+            border: 4px solid var(--verde-principal);
+            height: 220px; /* Altura fija */
+            overflow: hidden;
+            border-radius: 8px;
+        }
+
+        .hero-frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+        .hero-tag {
+            position: absolute;
+            bottom: -8px;
+            right: 30px;
+            background: var(--verde-principal);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        /* INFO & QR */
+        .details-section {
+            display: grid;
+            grid-template-columns: 1.5fr 1fr;
+            gap: 15px;
+            padding: 15px;
+            background: var(--verde-claro);
+            border-radius: 8px;
+            border: 1.5px solid var(--verde-principal);
+            margin-bottom: 15px;
+        }
+
+        .infra-info h4 { color: var(--verde-principal); font-size: 15px; margin-bottom: 5px; }
+        .infra-info p { font-size: 11px; margin-bottom: 3px; line-height: 1.2; }
+
+        .qr-area {
+            background: white;
+            padding: 8px;
+            border-radius: 6px;
+            border: 1.5px solid var(--verde-principal);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .qr-code { width: 85px; height: 85px; margin-bottom: 3px; }
+        .qr-text { font-size: 9px; font-weight: bold; color: var(--verde-oscuro); text-transform: uppercase; }
+
+        /* FOOTER INTEGRADO */
+        footer {
+            background: var(--verde-principal);
+            color: white;
+            padding: 15px 35px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+        }
+
+        .footer-left { display: flex; flex-direction: column; gap: 3px; }
+        .footer-logo { height: 45px; filter: brightness(0) invert(1); }
+        .footer-address { font-size: 10px; color: var(--verde-claro); }
+
+        .social-info { text-align: right; }
+        .social-info p { font-size: 13px; font-weight: bold; }
+        .social-info a { color: white; text-decoration: none; font-size: 11px; border-bottom: 1px solid var(--verde-vivo); }
+
+        /* AJUSTES DE IMPRESIÓN */
+        @media print {
+            @page { size: A4; margin: 0; }
+            body { background: white; padding: 0; }
+            .toolbar { display: none !important; }
+            .poster-container {
+                width: 210mm;
+                height: 297mm;
+                box-shadow: none;
+                margin: 0;
+            }
+        }
+
+        /* RESPONSIVO MÓVIL (SÓLO VISUALIZACIÓN) */
+        @media (max-width: 210mm) {
+            .poster-container { width: 100vw; height: auto; min-height: 100vh; border: none; }
+            .poster-inner { margin: 5px; padding: 15px; }
+            .experience-grid { grid-template-columns: 1fr; }
+            .details-section { grid-template-columns: 1fr; }
+            footer { flex-direction: column; gap: 10px; text-align: center; }
+            .social-info { text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="toolbar">
+        <button class="btn-action btn-print" onclick="window.print()">
+            <i class="fa-solid fa-print"></i> Imprimir / PDF
+        </button>
+        <button class="btn-action btn-download" onclick="downloadHTML()">
+            <i class="fa-solid fa-file-code"></i> Descargar HTML
+        </button>
+    </div>
+
+    <div class="poster-container">
+        <div class="poster-inner">
+            <header>
+                <img src="https://lh3.googleusercontent.com/d/1LNTkboFIGhJdPeAVw-08ffqZQP3cqIHm" alt="Logo El Limonar" class="logo-header">
+                <h1>Bitácora de Biodiversidad</h1>
+                <p class="tagline">El Puente entre Montaña y Mar</p>
+            </header>
+
+            <div class="experience-grid">
+                <div class="exp-card">
+                    <div class="img-box"><img src="https://lh3.googleusercontent.com/d/17E-I6hHpP-pQbI-3MDW10AzIsL9aL1eS" alt="Día 1"></div>
+                    <div class="exp-info">
+                        <h3>Día 1: Agua</h3>
+                        <p>Ciénaga Caimanera.</p>
+                    </div>
+                </div>
+                <div class="exp-card">
+                    <div class="img-box"><img src="https://lh3.googleusercontent.com/d/1-JAkeDNujm3qlfFak7UNyNQ9_8qGG-Ni" alt="Día 2"></div>
+                    <div class="exp-info">
+                        <h3>Día 2: Tierra</h3>
+                        <p>Colosó y Cultura.</p>
+                    </div>
+                </div>
+                <div class="exp-card">
+                    <div class="img-box"><img src="https://lh3.googleusercontent.com/d/1nSY7HKqPBRd1Tq1WZKqSHqjRnqdcWB-B" alt="Día 3"></div>
+                    <div class="exp-info">
+                        <h3>Día 3: Piedra</h3>
+                        <p>Trekking Roca Madre.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hero-section">
+                <div class="hero-frame">
+                    <img src="https://lh3.googleusercontent.com/d/1MjKqZsK3r1pHV6y7Eycj2OCSip8i1J4J" alt="Arquitectura El Limonar">
+                </div>
+                <div class="hero-tag">Refugio Orgánico</div>
+            </div>
+
+            <div class="details-section">
+                <div class="infra-info">
+                    <h4>Arquitectura Sostenible</h4>
+                    <p><i class="fa-solid fa-check text-verde-principal"></i> Techos de palma y barro térmico.</p>
+                    <p><i class="fa-solid fa-check text-verde-principal"></i> Madera de origen legal y local.</p>
+                    <p style="margin-top: 5px; font-weight: bold; color: var(--terracota);">Ubicación: Ruta 9004, Sucre.</p>
+                </div>
+                <div class="qr-area">
+                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://ecolimonar.github.io/bitacora-limonar/" alt="QR" class="qr-code">
+                    <p class="qr-text">Bitácora Digital</p>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <div class="footer-left">
+                <img src="https://lh3.googleusercontent.com/d/1LNTkboFIGhJdPeAVw-08ffqZQP3cqIHm" alt="Logo" class="footer-logo">
+                <p class="footer-address">Toluviejo, Sucre. Troncal del Caribe.</p>
+            </div>
+            <div class="social-info">
+                <p><i class="fa-brands fa-instagram"></i> @limonarecohotel</p>
+                <a href="https://maps.app.goo.gl/a2AaTzEoXc1dyGFU8" target="_blank">Abrir Google Maps</a>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        function downloadHTML() {
+            const htmlContent = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+            const blob = new Blob([htmlContent], { type: 'text/html' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'poster_limonar.html';
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+        }
+    </script>
+</body>
+</html>
